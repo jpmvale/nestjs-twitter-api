@@ -1,0 +1,52 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { PostService } from './post.service';
+import { CreatePostDto, UpdatePostDto } from './post.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { Post as PostEntity } from '@prisma/client';
+
+@ApiTags('Post Controller')
+@Controller('post')
+export class PostController {
+  constructor(private postService: PostService) {}
+
+  @Get('')
+  async listPosts() {
+    return await this.postService.listPosts();
+  }
+
+  @Post('')
+  async createPost(@Body() post: CreatePostDto): Promise<PostEntity> {
+    return await this.postService.createPost({ post });
+  }
+
+  @Delete('')
+  async deletePosts(@Body() { ids }: { ids: number[] }) {
+    return await this.postService.deletePosts({ ids });
+  }
+
+  @Get(':id')
+  async getPostByid(@Param('id') id: number): Promise<PostEntity> {
+    return await this.postService.getPostById({ id: Number(id) });
+  }
+
+  @Patch(':id')
+  async updatePostById(
+    @Param('id') id: number,
+    @Body() post: UpdatePostDto,
+  ): Promise<PostEntity> {
+    return await this.postService.updatePostById({ id: Number(id), post });
+  }
+
+  @Delete(':id')
+  async deletePostById(@Param('id') id: number) {
+    return await this.postService.deletePostById({ id: Number(id) });
+  }
+}
