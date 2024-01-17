@@ -5,7 +5,7 @@ class CreatePostDto {
   @IsNotEmpty()
   @IsNumber()
   @IsOptional()
-  authorId: number;
+  author: number;
 
   @ApiProperty({ required: true, description: 'Post content' })
   @IsNotEmpty()

@@ -5,6 +5,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -18,6 +22,8 @@ model User {
 
   posts Post[]
   likes Like[]
+  follower  Follow[] @relation("Follower")
+  following Follow[] @relation("Following")
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
@@ -27,6 +33,9 @@ model Post {
   id       Int    @id @default(autoincrement())
   text     String
   authorId Int
+  type    PostType     @default(ORIGINAL)
+
+  originalPostId Int? // can be a post re-post or a post replied.
 
   author User?  @relation(fields: [authorId], references: [id])
   likes  Like[]
@@ -45,16 +54,27 @@ model Like {
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
+
+  @@unique([userId, postId]) // The same user cannot like twice the same post
 }
 
-//TODO implement follow business logic
-// model Follow {
-//   id     Int @id @default(autoincrement())
-//   followerId Int
-//   followingId Int
+model Follow {
+  id          Int @id @default(autoincrement())
+  followerId  Int
+  followingId Int
 
-//   follower User @relation("follower", fields: [followerId], references: [id])
-//   following User @relation("following", fields: [followingId], references: [id])
-//   createdAt DateTime? @default(now())
-//   updatedAt DateTime? @updatedAt
-// }
+  follower  User @relation("Follower", fields: [followerId], references: [id])
+  following User @relation("Following", fields: [followingId], references: [id])
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@unique([followerId, followingId], name: "unique_follower_following")
+}
+
+
+enum PostType {
+  ORIGINAL
+  REPOST
+  REPLY
+}

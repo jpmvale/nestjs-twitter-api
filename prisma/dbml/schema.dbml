@@ -1,0 +1,72 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id Int [pk, increment]
+  email String [unique, not null]
+  name String [not null]
+  userName String [unique, not null]
+  posts Post [not null]
+  likes Like [not null]
+  follower Follow [not null]
+  following Follow [not null]
+  createdAt DateTime [default: `now()`]
+  updatedAt DateTime
+}
+
+Table Post {
+  id Int [pk, increment]
+  text String [not null]
+  authorId Int [not null]
+  type PostType [not null, default: 'ORIGINAL']
+  originalPostId Int [not null, default: 0]
+  author User
+  likes Like [not null]
+  createdAt DateTime [default: `now()`]
+  updatedAt DateTime
+}
+
+Table Like {
+  id Int [pk, increment]
+  userId Int [not null]
+  postId Int [not null]
+  post Post [not null]
+  user User [not null]
+  createdAt DateTime [default: `now()`]
+  updatedAt DateTime
+
+  indexes {
+    (userId, postId) [unique]
+  }
+}
+
+Table Follow {
+  id Int [pk, increment]
+  followerId Int [not null]
+  followingId Int [not null]
+  follower User [not null]
+  following User [not null]
+  createdAt DateTime [default: `now()`]
+  updatedAt DateTime
+
+  indexes {
+    (followerId, followingId) [unique]
+  }
+}
+
+Enum PostType {
+  ORIGINAL
+  REPOST
+  REPLY
+}
+
+Ref: Post.authorId > User.id
+
+Ref: Like.postId > Post.id
+
+Ref: Like.userId > User.id
+
+Ref: Follow.followerId > User.id
+
+Ref: Follow.followingId > User.id

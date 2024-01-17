@@ -28,12 +28,6 @@ export class LikeRepository {
     });
   }
 
-  async createLike({ like }: { like: LikeDto }): Promise<Like> {
-    return await this.prismaService.like.create({
-      data: like,
-    });
-  }
-
   async createOrDeleteLike({ like }: { like: LikeDto }) {
     const hasLike = await this.prismaService.like.findFirst({
       where: like,

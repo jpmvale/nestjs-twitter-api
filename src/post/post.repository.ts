@@ -3,19 +3,53 @@ import { PrismaService } from '../prisma.service';
 import { CreatePostDto, UpdatePostDto } from './post.dto';
 import { Post } from '@prisma/client';
 
+import { PostType } from '../types/postType.type';
+
 @Injectable()
 export class PostRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async listPosts(): Promise<Post[]> {
+  async listPosts({
+    originalPostId,
+    allowedUserIds,
+  }: {
+    originalPostId: number;
+    allowedUserIds: number[];
+  }): Promise<Post[]> {
+    const where = {};
+    if (originalPostId) {
+      where['originalPostId'] = originalPostId;
+    }
+
+    where['authorId'] = {
+      in: allowedUserIds,
+    };
     return this.prisma.post.findMany({
+      where,
       include: { author: true },
     });
   }
 
-  async createPost({ post }: { post: CreatePostDto }): Promise<Post> {
+  async createPost({
+    post,
+    type,
+    originalPostId,
+  }: {
+    post: CreatePostDto;
+    type?: PostType;
+    originalPostId?: number;
+  }): Promise<Post> {
+    if (!type)
+      return this.prisma.post.create({
+        data: { ...post, author: { connect: { id: post.author } } },
+      });
     return this.prisma.post.create({
-      data: post,
+      data: {
+        ...post,
+        originalPostId,
+        type,
+        author: { connect: { id: post.author } },
+      },
     });
   }
 

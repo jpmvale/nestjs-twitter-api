@@ -15,10 +15,6 @@ export class LikeService {
     return this.likeRepository.getLikesByUserId({ userId });
   }
 
-  async createLike({ like }: { like: LikeDto }): Promise<Like> {
-    return this.likeRepository.createLike({ like });
-  }
-
   async createOrDeleteLike({ like }: { like: LikeDto }) {
     return this.likeRepository.createOrDeleteLike({ like });
   }
