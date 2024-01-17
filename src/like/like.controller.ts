@@ -2,7 +2,9 @@ import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { LikeService } from './like.service';
 import { Like } from '@prisma/client';
 import { LikeDto } from './like.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Like Controller')
 @Controller('like')
 export class LikeController {
   constructor(private likeService: LikeService) {}
