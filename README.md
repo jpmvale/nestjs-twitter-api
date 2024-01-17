@@ -28,17 +28,17 @@ This project is created for educational purposes, to teach basic Nestjs elements
 
 ## Features
 
-[x] - CRUD User
-[x] - CRUD Post
-[x] - Like/Unlike Post
-[x] - Follow/Unfollow a User
-[x] - Repost/Reply a Post
-[x] - List all Repost/Replies from a PostId
-[x] - List only Posts of followed Users
-[] - Upload Media on Post
-[] - BONUS: Authentication/Authorization
-[] - BONUS: Search feature with Caching
-[] - BONUS: Notification module
+- [X] CRUD User
+- [x] CRUD Post
+- [x] Like/Unlike Post
+- [x] Follow/Unfollow a User
+- [x] Repost/Reply a Post
+- [x] List all Repost/Replies from a PostId
+- [x] List only Posts of followed Users
+- [ ] Upload Media on Post
+- [ ] BONUS: Authentication/Authorization
+- [ ] BONUS: Search feature with Caching
+- [ ] BONUS: Notification module
 
 ## Installation
 
